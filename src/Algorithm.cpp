@@ -59,7 +59,7 @@ pair<int, int> solve(Global *global)
         // 1 vs 3
         if (global->me.currentX == -1 && global->me.currentY == -1)
         {
-            // Game Start, bo goc thoi nao
+          //   Game Start, bo goc thoi nao
             return {0,0};
         }
 //        vector <pair<int, int>> path;
