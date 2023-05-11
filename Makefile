@@ -16,8 +16,8 @@ build/%.o: src/%.cpp $(HEADERS)
 build: $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(TARGET)
 
-default: build
+default: ./build
 
 clean:
-	@rm -rf build/*.o ${TARGET}
+	@rm -rf ./build/*.o ${TARGET}
 

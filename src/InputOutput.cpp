@@ -1,21 +1,19 @@
 #include"InputOutput.h"
+#include"LoadWrite.h"
 
 using namespace std;
-bool is_empty_file(std::ifstream& pFile)
-{
-    if (!pFile) return true;
-    return pFile.peek() == std::ifstream::traits_type::eof();
-}
+
 void input(Global *global) {
     ifstream inputFile("MAP.INP");
 
     inputFile >> global->M >> global->N >> global->K >> global->T >> global->me.currentX >> global->me.currentY >> global->me.color >> global->P;
+    loadStateData(global);
     for (int i = 0; i < global->P; ++i)
         {
             int X,Y;
             char C;
-            inputFile >> X >> Y >>C;
-            global->otherPlayers.push_back({X,Y,C});
+            inputFile >> X >> Y >> C;
+            global->otherPlayers[C - 'A'].push_back({X,Y,C});
         }
 
     global->board.resize(global->M, vector<char>(global->N, '.'));

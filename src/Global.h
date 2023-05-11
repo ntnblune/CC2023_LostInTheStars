@@ -11,11 +11,14 @@ class Global
 {
 public:
     const int inf = 1e6;
-
-    int M, N, K, T,P;
+    int M, N, K, T,P, aliveEnemy;
     Player me;
     const short directions[4][2] = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
     vector<vector<char>> board;
-    vector<Player> otherPlayers;
+    vector<Player> playerHistory, nextMoves, otherPlayers[4];  // luot, xy_coord
+    vector<char> color;
 };
+
+bool is_empty_file(std::ifstream& pFile);
+
 #endif // GLOBAL_H_INCLUDED
