@@ -45,7 +45,6 @@ vector <vector<int>> findDistant(Global *global,int currentX,int currentY){
 }
 pair<int,int> buildNewPath(Global *global, vector <pair<int, int>> &path)
 {
-<<<<<<< HEAD
     vector<vector<int>> countt(4,vector<int>(5,0));
     vector<string> board = global->board;
     // countt[0] : edge 00
@@ -64,17 +63,12 @@ pair<int,int> buildNewPath(Global *global, vector <pair<int, int>> &path)
     int M = global->M;
     int K = global->K;
     if (N == 19 && M == 19 && global->otherPlayers.size() == 2 && global->K == 8)
-=======
-    return {0,0};
-    if (areOnlySurvivor(global) == true)
->>>>>>> d3353009cc2ab911f00c4060a2d8e3680b551457
     {
         path = { {0,N-6},
             {1,N-6}, {1,N-5}, {1,N-4}, {1,N-3}, {1,N-2}, {1,N-1}
         };
         return {0,N-5};
     }
-<<<<<<< HEAD
     for (int i = 0; i < M; i++)
     {
         if(global->board[i][0] == '.') countt[0][0]++;
@@ -230,13 +224,6 @@ pair<int,int> buildNewPath(Global *global, vector <pair<int, int>> &path)
         }
 
     }
-=======
-    // else if (global->otherPlayers.size() == 1)
-    // {
-    //     // solo 1 vs 1
-    //     return {0,0};
-    // }
->>>>>>> d3353009cc2ab911f00c4060a2d8e3680b551457
     else
     {
         if (countt[0][3] == 0)
