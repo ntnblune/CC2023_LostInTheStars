@@ -9,7 +9,6 @@ bool loadStateData(Global *global)
     {
         while (fin >> s)
         {
-            global->me.currentX = global->me.currentY = -1;
             if (s == "HistoryPath")
             {
                 for (int j = 0; j < global->T; j++)
@@ -31,17 +30,18 @@ bool loadStateData(Global *global)
             }
             else if (s == "OtherPlayers")
             {
-                for (int j = 0; j < 3; j++)
+                int num;
+                fin >> num;
+                for (int j = 0; j < num; j++)
                 {
-                    int index;
                     char c;
-                    fin >> index >> c;
+                    fin >> c;
                     for (int i = 0; i < global->T; i++)
                     {
                         Player k;
                         fin >> k.currentX >> k.currentY;
                         k.color = c;
-                        global->otherPlayers[j].push_back(k);
+                        global->otherPlayers[c - 'A'].push_back(k);
                     }
                 }
             }
@@ -78,12 +78,13 @@ void saveStateData(Global *global)
         }
         else if (s[i] == "OtherPlayers")
         {
-            for (int j = 0; j < 3; j++)
+            fout << global->P - 1;
+            for (int j = 0; j < global->P - 1; j++)
             {
-                fout << j << ' ' << global->otherPlayers[j][0].color << endl;
+                fout << j << ' ' << global->color[j] << endl;
                 for (int h = 0; h < global->T + 1; h++)
                 {
-                    fout << global->otherPlayers[j][h].currentX << ' ' << global->otherPlayers[j][h].currentY << endl;
+                    fout << global->otherPlayers[global->color[j] - 'A'][h].currentX << ' ' << global->otherPlayers[global->color[j] - 'A'][h].currentY << endl;
                 }
             }
         }

@@ -12,8 +12,8 @@ void input(Global *global) {
         {
             int X,Y;
             char C;
-            inputFile >> X >> Y >>C;
-            global->otherPlayers[i].push_back({X,Y,C});
+            inputFile >> X >> Y >> C;
+            global->otherPlayers[C - 'A'].push_back({X,Y,C});
         }
 
     global->board.resize(global->M, vector<char>(global->N, '.'));
