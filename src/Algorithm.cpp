@@ -3,9 +3,9 @@ bool areOnlySurvivor(Global *global)
 {
     if (global->me.currentX == -1 && global->me.currentY == -1)
         return false;
-    for (Player e : global->otherPlayers)
+    for (int i = 0; i < 3; i++)
     {
-        if (e.currentX == -1 && e.currentY == -1)
+        if (global->otherPlayers[i][global->otherPlayers[i].size()-1].currentX == -1 && global->otherPlayers[i][global->otherPlayers[i].size()-1].currentY == -1)
             continue;
         return false;
     }
@@ -45,15 +45,16 @@ vector <vector<int>> findDistant(Global *global){
 }
 pair<int, int> solve(Global *global)
 {
+    return {0,0};
     if (areOnlySurvivor(global) == true)
     {
         // an full map con lai
     }
-    else if (global->otherPlayers.size() == 1)
-    {
-        // solo 1 vs 1
-        return {0,0};
-    }
+    // else if (global->otherPlayers.size() == 1)
+    // {
+    //     // solo 1 vs 1
+    //     return {0,0};
+    // }
     else
     {
         // 1 vs 3

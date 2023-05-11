@@ -9,16 +9,46 @@ bool loadStateData(Global *global)
     {
         while (fin >> s)
         {
-
-        }
-        int nextX = -1, nextY = -1;
-        while (inputFile >> nextX >> nextY)
-        {
-            path.push_back(make_pair(nextX, nextY));
+            global->me.currentX = global->me.currentY = -1;
+            if (s == "HistoryPath")
+            {
+                for (int j = 0; j < global->T; j++)
+                {
+                    Player k;
+                    fin >> k.currentX >> k.currentY;
+                }
+            }
+            else if (s == "FolowingMoves")
+            {
+                int t;
+                fin >> t;
+                for (int j = 0; j < t; j++)
+                {
+                    Player k;
+                    fin >> k.currentX >> k.currentY;
+                    global->nextMoves.push_back(k);
+                }
+            }
+            else if (s == "OtherPlayers")
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    int index;
+                    char c;
+                    fin >> index >> c;
+                    for (int i = 0; i < global->T; i++)
+                    {
+                        Player k;
+                        fin >> k.currentX >> k.currentY;
+                        k.color = c;
+                        global->otherPlayers[j].push_back(k);
+                    }
+                }
+            }
         }
         load = true;
     }
-    inputFile.close();
+    fin.close();
     return load;
 }
 
@@ -32,6 +62,7 @@ void saveStateData(Global *global)
         fout << s[i] << endl;
         if (s[i] == "HistoryPath")
         {
+            global->playerHistory.push_back(global->me);
             for (int j = 0; j < global->T + 1; j++)
             {
                 fout << global->playerHistory[j].currentX << ' ' << global->playerHistory[j].currentY << endl;
@@ -49,10 +80,10 @@ void saveStateData(Global *global)
         {
             for (int j = 0; j < 3; j++)
             {
-                fout << j << ' ' << global->otherPlayer[j].color << endl;
+                fout << j << ' ' << global->otherPlayers[j][0].color << endl;
                 for (int h = 0; h < global->T + 1; h++)
                 {
-                    fout << global->otherPlayer[j].currentX << ' ' << global->otherPlayer[j].currentY << endl;
+                    fout << global->otherPlayers[j][h].currentX << ' ' << global->otherPlayers[j][h].currentY << endl;
                 }
             }
         }
