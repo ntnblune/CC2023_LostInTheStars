@@ -17,8 +17,8 @@ public:
     vector<vector<char>> board;
     vector<Player> playerHistory, nextMoves, otherPlayers[4];  // luot, xy_coord
     vector<char> color;
+    vector<int> playerFollowTail; // kiểm tra ai sẽ theo đuôi
 };
-
 bool is_empty_file(std::ifstream& pFile);
 
 #endif // GLOBAL_H_INCLUDED

@@ -43,9 +43,67 @@ vector <vector<int>> findDistant(Global *global){
     return dist;
 
 }
+
+vector<int> checkFollowTail(Global *global){
+    vector<int> v;
+    v.clear();
+    bool firstEqual = false, secondEqual = false;
+    if (global->T >= 3){
+        for (int i = 0; i < 4; i++)
+        {
+            firstEqual = secondEqual = false; 
+            if (!global->otherPlayers[i].empty())
+            {
+                if (count(global->playerFollowTail.begin(), global->playerFollowTail.end(), i) > 0) 
+                {
+                    v.push_back(i);
+                    continue;
+                }
+                int yourSize = global->otherPlayers[i].size();
+                int mySize = global->playerHistory.size();
+                cout << "Your size: " << yourSize << endl;
+                cout << "My size: " << mySize << endl;
+                cout << "Hello" << endl;
+                if (global->playerHistory[mySize - 2].currentX == global->otherPlayers[i][yourSize - 1].currentX
+                    && global->playerHistory[mySize - 2].currentY == global->otherPlayers[i][yourSize - 1].currentY)
+                {
+                    firstEqual = true;
+                    cout << "first true" << endl;
+                }
+                if (global->playerHistory[mySize - 3].currentY == global->otherPlayers[i][yourSize - 2].currentY
+                    && global->playerHistory[mySize - 3].currentY == global->otherPlayers[i][yourSize - 2].currentY)
+                {
+                    secondEqual = true;
+                    cout << "second true" << endl;
+                }
+            }
+            if (firstEqual && secondEqual) 
+            {
+                global->playerFollowTail.push_back(i);
+                v.push_back(i);
+            }
+        }
+    }
+    return v;
+}
+
 pair<int, int> solve(Global *global)
 {
-    return {0,0};
+    
+    if (global->me.currentX == -1 && global->me.currentY == -1)
+        return {2,0};
+
+    vector<int>v = checkFollowTail(global);
+    if (v.size() > 0)
+    {
+        int size = global->otherPlayers[v[0]].size();
+        return {global->otherPlayers[v[0]][size - 1].currentX, global->otherPlayers[v[0]][size-1].currentY};
+    }
+
+    if (global->me.currentY <= global->N - 5) return {global->me.currentX, global->me.currentY+1};
+    //else if (global->me.currentX <= global->N - 5) return {global->me.currentX+1, global->me.currentY};
+    //else return  {global->me.currentX, global->me.currentY-1};
+
     if (areOnlySurvivor(global) == true)
     {
         // an full map con lai
