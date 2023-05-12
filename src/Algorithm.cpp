@@ -200,7 +200,6 @@ pair<int, int> buildNewPath(Global *global, vector<pair<int, int>> &path)
         }
         sort(x.begin(), x.end(), [](const vector<int> &x, const vector<int> &y)
              { return x[1] > y[1]; });
-        // for (int i = 0; i < )
         if (x[0][2] == 0)
         {
             for (int i = x[0][0] + 1; i <= x[0][0] + x[0][1]; i++)
@@ -263,7 +262,6 @@ pair<int, int> buildNewPath(Global *global, vector<pair<int, int>> &path)
                     //                    {
                     //                        cout << e.first << ' ' << e.second << endl;
                     //                    }
-
                     return {i, 0};
                 }
         }
@@ -323,12 +321,16 @@ pair<int, int> buildNewPath(Global *global, vector<pair<int, int>> &path)
     }
 }
 
-bool checkSurvive(Global *global, int x, int y, pair<int,int> &next_move)
+bool checkSurvive(Global *global, int x, int y, pair<int, int> &next_move)
 {
     int k = global->K;
     int T = global->T;
     int circle = min({x, y, global->M - 1 - x, global->N - 1 - y});
-    int nextCircle = T / k + 1;
+    int nextCircle;
+    if (T % k == 0)
+        nextCircle = T / k;
+    else
+        nextCircle = T / k + 1;
     int remainTime = nextCircle * k - T;
     int start = nextCircle;
     int n = global->N - nextCircle;
@@ -341,7 +343,7 @@ bool checkSurvive(Global *global, int x, int y, pair<int,int> &next_move)
         for (int j = start; j < n; j++)
         {
             int dist = Dist[i][j];
-            if (dist <= remainTime) 
+            if (dist <= remainTime)
             {
                 return true;
             }
@@ -352,30 +354,34 @@ bool checkSurvive(Global *global, int x, int y, pair<int,int> &next_move)
                 curDist = dist;
             }
         }
-    next_move = {tmpx,tmpy};
+    next_move = {tmpx, tmpy};
     return false;
 }
 
-bool genPath(Global *global, pair<int,int> next_move)
+bool genPath(Global *global, pair<int, int> next_move)
 {
     int currentX = global->me.currentX;
     int currentY = global->me.currentY;
     int endX = next_move.first;
     int endY = next_move.second;
-    vector <vector<int>> dist = findDistant(global, currentX, currentY);
+    vector<vector<int>> dist = findDistant(global, currentX, currentY);
     global->nextMoves.clear();
-    if (dist[endX][endY] >= global->inf) return false;
+    if (dist[endX][endY] >= global->inf)
+        return false;
 
     if (currentX != endX || currentY != endY)
         global->nextMoves.push_back({endX, endY, global->me.color});
-    while (endX != currentX || endY != currentY){
+    while (endX != currentX || endY != currentY)
+    {
         int best = global->inf, bestX = endX, bestY = endY;
-        for (const auto &[dx, dy] : global->directions) {
+        for (const auto &[dx, dy] : global->directions)
+        {
             int nextX = endX + dx;
             int nextY = endY + dy;
-            if (nextX < 0 || nextY < 0 || nextX >= global->M || nextY >= global->N )
+            if (nextX < 0 || nextY < 0 || nextX >= global->M || nextY >= global->N)
                 continue;
-            if (dist[nextX][nextY] + 1 == dist[endX][endY]){
+            if (dist[nextX][nextY] + 1 == dist[endX][endY])
+            {
                 endX = nextX;
                 endY = nextY;
                 break;
@@ -406,22 +412,52 @@ pair<int, int> solve(Global *global)
     }
     if (global->nextMoves.size() == 0)
     {
-        pair<int,int> next_move;
-        int x = 0;
-        int y = 0;
-        if (checkSurvive(global, x,y, next_move) == true)
-        return {x,y};
-        genPath(global, next_move);
-        return next_move;
+        for (const auto &[dx, dy] : global->directions)
+        {
+            int nextX = global->me.currentX + dx;
+            int nextY = global->me.currentY + dy;
+            int circle = min({global->me.currentX, global->me.currentY, global->M - 1 - global->me.currentX, global->N - 1 - global->me.currentY});
+            int circleNext = min({nextX, nextY, global->M - 1 - nextX, global->N - 1 - nextY});
+            if (nextX < 0 || nextY < 0 || nextX >= global->M || nextY >= global->N || circle != circleNext || global->board[nextX][nextY] == '#'|| global->board[nextX][nextY] == global->me.color)
+                continue;
+            pair<int, int> next_move;
+            bool tmp = checkSurvive(global, nextX, nextY, next_move);
+            if (tmp == true) return {nextX, nextY};
+        }
+        for (const auto &[dx, dy] : global->directions)
+        {
+            int nextX = global->me.currentX + dx;
+            int nextY = global->me.currentY + dy;
+            int circle = min({global->me.currentX, global->me.currentY, global->M - 1 - global->me.currentX, global->N - 1 - global->me.currentY});
+            int circleNext = min({nextX, nextY, global->M - 1 - nextX, global->N - 1 - nextY});
+            cout << nextX <<' ' << nextY << ' '<< global->board[nextX][nextY] <<' ' << global->me.color<<endl;
+            if (nextX < 0 || nextY < 0 || nextX >= global->M || nextY >= global->N ||  global->board[nextX][nextY] == '#'|| global->board[nextX][nextY] == global->me.color)
+                continue;
+            pair<int, int> next_move;
+            bool tmp = checkSurvive(global, nextX, nextY, next_move);
+            if (tmp == true) return {nextX, nextY};
+        }
+        for (const auto &[dx, dy] : global->directions)
+        {
+            int nextX = global->me.currentX + dx;
+            int nextY = global->me.currentY + dy;
+            int circle = min({global->me.currentX, global->me.currentY, global->M - 1 - global->me.currentX, global->N - 1 - global->me.currentY});
+            int circleNext = min({nextX, nextY, global->M - 1 - nextX, global->N - 1 - nextY});
+            if (nextX < 0 || nextY < 0 || nextX >= global->M || nextY >= global->N ||  global->board[nextX][nextY] == '#')
+                continue;
+            pair<int, int> next_move;
+            bool tmp = checkSurvive(global, nextX, nextY, next_move);
+            if (tmp == true) return {nextX, nextY};
+        }
     }
     else
     {
         int x = global->nextMoves.back().currentX;
         int y = global->nextMoves.back().currentY;
-        pair<int,int> next_move;
+        pair<int, int> next_move;
         global->nextMoves.pop_back();
-        if (checkSurvive(global, x,y, next_move) == true)
-        return {x,y};
+        if (checkSurvive(global, x, y, next_move) == true)
+            return {x, y};
         genPath(global, next_move);
         return next_move;
     }

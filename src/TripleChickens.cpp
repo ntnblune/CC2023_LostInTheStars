@@ -9,8 +9,10 @@ int main() {
     cin.tie(0) -> sync_with_stdio(0);
     cout.tie(0);
     input(global);
-
-    output(solve(global));
+    pair<int,int> ans = solve(global);
+    output(ans);
+    global->me.currentX = ans.first;
+    global->me.currentY = ans.second;
     saveStateData(global);
     return 0;
 }
