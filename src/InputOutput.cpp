@@ -5,6 +5,7 @@ using namespace std;
 
 void input(Global *global) {
     ifstream inputFile("MAP.INP");
+
     inputFile >> global->M >> global->N >> global->K >> global->T >> global->me.currentX >> global->me.currentY >> global->me.color >> global->P;
     loadStateData(global);
     for (int i = 0; i < global->P; ++i)
@@ -25,11 +26,7 @@ void input(Global *global) {
             {
                 global->color.push_back(C);
             }
-            Player k;
-            k.currentX = X;
-            k.currentY = Y;
-            k.color = C;
-            global->otherPlayers[C - 'A'].push_back(k);
+            global->otherPlayers[C - 'A'].push_back({X,Y,C});
         }
 
     global->board.resize(global->M, vector<char>(global->N, '.'));
@@ -42,6 +39,7 @@ void input(Global *global) {
 }
 void output(const pair<int, int> &nextPositions) {
     ofstream outputFile("MOVE.OUT");
+    cout << "output" << endl;
     outputFile << nextPositions.first << ' ' << nextPositions.second << '\n';
     outputFile.close();
 }

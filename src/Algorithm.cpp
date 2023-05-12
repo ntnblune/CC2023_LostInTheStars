@@ -392,59 +392,10 @@ bool genPath(Global *global, pair<int, int> next_move)
     }
     return !global->nextMoves.empty();
 }
-
-vector<int> checkFollowTail(Global *global){
-    vector<int> v;
-    v.clear();
-    bool firstEqual = false, secondEqual = false;
-    if (global->T >= 3){
-        for (int i = 0; i < 4; i++)
-        {
-            firstEqual = secondEqual = false; 
-            if (!global->otherPlayers[i].empty())
-            {
-                if (count(global->playerFollowTail.begin(), global->playerFollowTail.end(), i) > 0) 
-                {
-                    v.push_back(i);
-                    continue;
-                }
-                int yourSize = global->otherPlayers[i].size();
-                int mySize = global->playerHistory.size();
-                if (global->playerHistory[mySize - 2].currentX == global->otherPlayers[i][yourSize - 1].currentX
-                    && global->playerHistory[mySize - 2].currentY == global->otherPlayers[i][yourSize - 1].currentY)
-                {
-                    firstEqual = true;
-                }
-                if (global->playerHistory[mySize - 3].currentY == global->otherPlayers[i][yourSize - 2].currentY
-                    && global->playerHistory[mySize - 3].currentY == global->otherPlayers[i][yourSize - 2].currentY)
-                {
-                    secondEqual = true;
-                }
-            }
-            if (firstEqual && secondEqual) 
-            {
-                global->playerFollowTail.push_back(i);
-                v.push_back(i);
-            }
-        }
-    }
-    return v;
-}
-
 pair<int, int> solve(Global *global)
 {
     vector<pair<int, int>> path;
     if (global->me.currentX == -1 && global->me.currentY == -1)
-        return {2,0};
-
-    vector<int>v = checkFollowTail(global);
-    if (v.size() > 0)
-    {
-        int size = global->otherPlayers[v[0]].size();
-        return {global->otherPlayers[v[0]][size - 1].currentX, global->otherPlayers[v[0]][size-1].currentY};
-    }
-
-    if (areOnlySurvivor(global) == true)
     {
         if (global->T != 0)
             return {0, 0};
@@ -479,7 +430,7 @@ pair<int, int> solve(Global *global)
             int nextY = global->me.currentY + dy;
             int circle = min({global->me.currentX, global->me.currentY, global->M - 1 - global->me.currentX, global->N - 1 - global->me.currentY});
             int circleNext = min({nextX, nextY, global->M - 1 - nextX, global->N - 1 - nextY});
-            cout << nextX <<' ' << nextY << ' '<< global->board[nextX][nextY] <<' ' << global->me.color<<endl;
+            //cout << nextX <<' ' << nextY << ' '<< global->board[nextX][nextY] <<' ' << global->me.color<<endl;
             if (nextX < 0 || nextY < 0 || nextX >= global->M || nextY >= global->N ||  global->board[nextX][nextY] == '#'|| global->board[nextX][nextY] == global->me.color)
                 continue;
             pair<int, int> next_move;
